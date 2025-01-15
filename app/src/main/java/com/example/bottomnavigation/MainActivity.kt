@@ -25,6 +25,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.bottomnavigation.ui.theme.BottomNavigationTheme
 
@@ -52,10 +53,18 @@ class MainActivity : ComponentActivity() {
                         unselectedIcon = Icons.Outlined.Settings
                     )
                 )
-                var navBarState by rememberSaveable {
-                    mutableIntStateOf(0)
-                }
+
                 val navController = rememberNavController()
+
+                val currentBackStackEntry by navController.currentBackStackEntryFlow.collectAsStateWithLifecycle(
+                    null
+                )
+                var navBarState = when (currentBackStackEntry?.destination?.route)  {
+                    Home::class.simpleName -> 0
+                    Search::class.simpleName -> 1
+                    Settings::class.simpleName -> 2
+                    else -> 0
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -67,9 +76,9 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
                                         navBarState = index
                                         when (index) {
-                                            0 -> navController.navigate(Home)
-                                            1 -> navController.navigate(Search)
-                                            2 -> navController.navigate(Settings)
+                                            0 -> navController.navigate(Home::class.simpleName!!)
+                                            1 -> navController.navigate(Search::class.simpleName!!)
+                                            2 -> navController.navigate(Settings::class.simpleName!!)
                                         }
                                     },
                                     label = {

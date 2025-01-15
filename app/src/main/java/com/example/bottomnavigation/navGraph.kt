@@ -13,15 +13,15 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home
+        startDestination = Home::class.simpleName!!
     ) {
-        composable<Home> {
+        composable(Home::class.simpleName!!) {
             HomeScreen()
         }
-        composable<Search> {
+        composable(Search::class.simpleName!!) {
             SearchScreen()
         }
-        composable<Settings> {
+        composable(Settings::class.simpleName!!) {
             SettingsScreen()
         }
     }
